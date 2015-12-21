@@ -18,6 +18,10 @@ private slots:
     void writeTwoFiles(void);
     void writeAndClearFile(void);
 
+    // Тест высокоуровневых процедур работы с файлом
+    void writeData(void);
+    void readData(void);
+
 private:
     static const char *File_Path;
 };
@@ -361,6 +365,42 @@ void TestWriteValue::writeAndClearFile(void)
     fclose(rf);
 
     QVERIFY(true);
+}
+
+// Записать данные в файл
+void TestWriteValue::writeData(void)
+{
+    const int Db_Count = 10;
+    const int Max_Count = 13;
+    DataBlock db[Db_Count] = {
+        0x11,
+        0x22,
+        0x33,
+        0x44,
+        0x55,
+        0x66,
+        0x77,
+        0x88,
+        0x99,
+        0xAA
+    };
+
+    int stat = fileApi_writeDataToFile("Hello.dat", db, Db_Count, Max_Count);
+    QVERIFY(!stat);
+}
+
+
+// Записать данные из файла
+void TestWriteValue::readData(void)
+{
+    const int Db_Count = 10;
+    DataBlock db[Db_Count];
+
+    uint32 readCount = 0;
+    int stat = fileApi_readDataFromFile("Hello.dat", db, Db_Count, 0, &readCount);
+    for (int i = 0; i < readCount; ++i)
+        qDebug() << db[i].value;
+    QVERIFY(!stat);
 }
 
 
